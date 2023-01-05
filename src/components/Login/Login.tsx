@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { LOGIN_IMG } from "../../constants/imageLinks";
 import { useAuthTokenMutation } from "../../redux/slices/authSlice";
+import { setAuthToken } from "../../redux/slices/tokenSlice";
 import "./login.css";
 
 const Login = () => {
@@ -14,12 +15,16 @@ const Login = () => {
       email: "",
       password: "",
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       try {
         const data = await authToken(values).unwrap();
-        // dispatch(authToken(data))
+        dispatch(setAuthToken(data));
+
+        //this function will reset form values
+        resetForm();
       } catch (error: any) {
-        toast.error(error.data.message, {
+        console.log("catch called :", error);
+        toast.error(error?.data?.message, {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -29,7 +34,7 @@ const Login = () => {
           progress: undefined,
           theme: "colored",
         });
-        console.log("catch :", error.data.message);
+        // console.log("catch :", error.data.message);
       }
     },
   });
@@ -65,7 +70,11 @@ const Login = () => {
                 id="outlined-basic"
                 label="Email"
                 variant="outlined"
-                sx={{ margin: "30px 0", color: "black" }}
+                sx={{
+                  margin: "30px 0",
+                  color: "black",
+                  width: "100%",
+                }}
                 name="email"
                 onChange={formik.handleChange}
                 value={formik.values.email}
@@ -75,13 +84,17 @@ const Login = () => {
                 id="outlined-basic"
                 label="Password"
                 variant="outlined"
-                sx={{ marginBottom: "30px", color: "black" }}
+                sx={{
+                  marginBottom: "30px",
+                  color: "black",
+                  width: "100%",
+                }}
                 name="password"
                 onChange={formik.handleChange}
                 value={formik.values.password}
               />
               <br />
-              <Button type="submit" variant="contained">
+              <Button sx={{ width: "100%" }} type="submit" variant="contained">
                 Sign In
               </Button>
             </form>

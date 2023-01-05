@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
 export const tokenSlice = createSlice({
   name: "authToken",
@@ -7,13 +8,16 @@ export const tokenSlice = createSlice({
     refreshToken: "",
   },
   reducers: {
-    authToken: (state, action) => {
+    setAuthToken: (
+      state,
+      action: PayloadAction<{ accessToken: string; refreshToken: string }>
+    ) => {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
-      return;
+      return state;
     },
   },
 });
 
-export const { authToken } = tokenSlice.actions;
+export const { setAuthToken } = tokenSlice.actions;
 export default tokenSlice.reducer;
